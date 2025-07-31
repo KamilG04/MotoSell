@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+{% for vehicle in vehicles %}
+    <article>
+        {% if vehicle.photo %}
+            <img src="{{ vehicle.photo.image.url }}" alt="{{ vehicle.photo.name }}" width="150">
+        {% endif %}
+        <h3><a href="{% url 'vehicles:detail' vehicle.pk %}">{{ vehicle.title }}</a></h3>
+        <p><strong>Marka:</strong> {{ vehicle.manufacturer }} {{ vehicle.model }} ({{ vehicle.make_year }})</p>
+        <p><strong>Dodał:</strong> {{ vehicle.user.username }}</p>
+
+        {% if user.is_authenticated and vehicle.user == user %}
+            <a href="{% url 'vehicles:update' vehicle.pk %}">Edytuj</a>
+            {% if not vehicle.is_published %}
+                <form action="{% url 'vehicles:publish' vehicle.pk %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Opublikuj</button>
+                </form>
+            {% endif %}
+            <form action="{% url 'vehicles:delete' vehicle.pk %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Usuń</button>
+            </form>
+        {% endif %}
+    </article>
+    <hr>
+{% empty %}
+    <p>Brak ogłoszeń do wyświetlenia.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h3>Dane ogłoszenia</h3>
+    {{ vehicle_form.as_p }}
+
+    <hr>
+
+    {% if vehicle %}
+        <h3>Galeria zdjęć</h3>
+        <p>Aktualne zdjęcia w galerii:</p>
+        <div>
+            {% for item in vehicle.gallery_images.all %}
+                <img src="{{ item.image.image.url }}" alt="{{ item.image.name }}" height="100">
+            {% empty %}
+                <p>Brak zdjęć w galerii.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h3>Dodaj zdjęcia do galerii</h3>
+    {{ gallery_form.as_p }}
+
+    <hr>
+    <button type="submit">Zapisz</button>
+</form>
+{% endblock %}

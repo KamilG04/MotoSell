@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 
 
 def validate_production_year(value):
-    """Walidator roku produkcji pojazdu"""
     current_year = timezone.now().year
     if value < 1885 or value > current_year + 1:
         raise ValidationError(
@@ -83,7 +82,7 @@ class Vehicle(models.Model):
     publication_date = models.DateTimeField(
         verbose_name="Data publikacji", blank=True, null=True
     )
-
+    is_deleted = models.BooleanField(default=False, verbose_name="Czy usunięto")
     class Meta:
         verbose_name = "Pojazd"
         verbose_name_plural = "Pojazdy"
@@ -100,10 +99,10 @@ class Vehicle(models.Model):
 
 
 class Gallery(models.Model):
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="gallery_images")
+
     image = models.ForeignKey(
-        Image, on_delete=models.CASCADE, related_name="gallery_images"
-    )
+        Image, on_delete=models.CASCADE, related_name="gallery_entries")
 
     class Meta:
         verbose_name = "Zdjęcie w galerii"

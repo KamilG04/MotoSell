@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ vehicle.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ vehicle.title }}</h1>
+<p><strong>Sprzedający:</strong> {{ vehicle.user.username }}</p>
+
+{% if vehicle.photo %}
+    <h3>Zdjęcie główne</h3>
+    <img src="{{ vehicle.photo.image.url }}" alt="{{ vehicle.photo.name }}" style="max-width: 800px;">
+{% endif %}
+
+<hr>
+<h3>Szczegóły pojazdu</h3>
+<ul>
+    <li><strong>Marka:</strong> {{ vehicle.manufacturer }}</li>
+    <li><strong>Model:</strong> {{ vehicle.model }}</li>
+    <li><strong>Rok produkcji:</strong> {{ vehicle.make_year }}</li>
+    <li><strong>Kategoria:</strong> {{ vehicle.get_category_display }}</li>
+    <li><strong>Przebieg:</strong> {{ vehicle.mileage }} km</li>
+    <li><strong>Pojemność:</strong> {{ vehicle.cubic_capacity }} cm³</li>
+    <li><strong>Moc:</strong> {{ vehicle.power }} KM</li>
+    <li><strong>Rodzaj paliwa:</strong> {{ vehicle.get_fuel_type_display }}</li>
+</ul>
+
+<hr>
+<h3>Opis</h3>
+<p>{{ vehicle.description|linebreaks }}</p>
+
+{% if gallery_images %}
+    <hr>
+    <h3>Galeria</h3>
+    {% for item in gallery_images %}
+        <img src="{{ item.image.image.url }}" alt="{{ item.image.name }}" height="150">
+    {% endfor %}
+{% endif %}
+{% endblock %}

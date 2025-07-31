@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}MotoSell{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'vehicles:public_list' %}"><h1>MotoSell</h1></a>
+        <div>
+            {% if user.is_authenticated %}
+                <span>Witaj, {{ user.username }}!</span>
+                <a href="{% url 'vehicles:user_list' %}">Moje ogłoszenia</a>
+                <a href="{% url 'vehicles:create' %}">Dodaj ogłoszenie</a>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Wyloguj</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Zaloguj</a> |
+                <a href="{% url 'register' %}">Zarejestruj się</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <hr>
+
+    <main>
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
